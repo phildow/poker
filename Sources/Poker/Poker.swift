@@ -9,29 +9,29 @@ import Foundation
 
 /// An untyped hand only indicates whether the hand is suited (s) or unsited (o) without specifying the suits, such as "AKo". StartingHands are untyped.
 
-typealias UntypedHand = String
+public typealias UntypedHand = String
 
 /// A typed hand is a fully specified hand with suits such as "AhKd".
 
-typealias TypedHand = String
+public typealias TypedHand = String
 
 /// The suitedness of an untyped hand, whether it is suited or unsuited.
 
-enum Suited: String {
+public enum Suited: String {
     case suited = "s"
     case offsuite = "o"
 }
 
 /// A playing card is a fully typed card with a suit and a value.
 
-struct PlayingCard {
-    enum Suit: String, CaseIterable {
+public struct PlayingCard {
+    public enum Suit: String, CaseIterable {
         case hearts = "♥"
         case spades = "♠"
         case diamonds = "♦"
         case clubs = "♣"
     }
-    enum Value: String, CaseIterable {
+    public enum Value: String, CaseIterable {
         case deuce = "2"
         case trey = "3"
         case four = "4"
@@ -53,18 +53,18 @@ struct PlayingCard {
 
 /// A table has players sitting in particular positions with action
 
-struct Table {
+public struct Table {
 
     /// The player under consideration is either the hero or the villain (opponent).
 
-    enum Player: String, CaseIterable {
+    public enum Player: String, CaseIterable {
         case hero
         case villain
     }
 
     /// The position at the table. Any player involved in a hand will have a position.
 
-    enum Position: String, CaseIterable {
+    public enum Position: String, CaseIterable {
         case SB
         case BB
         case UTG
@@ -77,7 +77,7 @@ struct Table {
 
     /// The action facing the hero. All actions but raise first in (RFI) imply a villain.
 
-    enum Action: String, CaseIterable {
+    public enum Action: String, CaseIterable {
         case LIMP
         case RFI
         case VS_RAISE
@@ -102,7 +102,7 @@ struct Table {
 /// The distribution of actions to take with an untyped hand.
 /// Raise may simply mean raise but may also mean 3bet, 4bet, 5bet, etc depending on the context.
 
-struct ActionDistribution {
+public struct ActionDistribution {
     var hand: UntypedHand
     var raise: Float
     var call: Float
@@ -112,7 +112,7 @@ struct ActionDistribution {
 
 /// Whether the game is a cash game or tournament, with different implications for number of blinds and ranges
 
-enum GameType: String {
+public enum GameType: String {
     case cash
     case tournament
 }
@@ -123,7 +123,7 @@ enum GameType: String {
 /// A specific drill will generate a random untyped hand for the hero, type it to suits,
 /// and then look up the `ActionDistribution` for that hand given the other parameters of the drill.
 
-struct Drill {
+public struct Drill {
     let title: String
     let gameType: GameType
     let blinds: Int
@@ -137,9 +137,9 @@ struct Drill {
 
 /// All possible untyped starting hands in hold'em.
 
-struct HoldEm {
+public struct HoldEm {
     
-    static let StartingHands: [UntypedHand] = [
+    public static let StartingHands: [UntypedHand] = [
         "AA" , "AKs" , "AQs", "AJs", "ATs", "A9s", "A8s", "A7s", "A6s", "A5s", "A4s", "A3s", "A2s",
         "AKo" , "KK" , "KQs", "KJs", "KTs", "K9s", "K8s", "K7s", "K6s", "K5s", "K4s", "K3s", "K2s",
         "AQo" , "KQo" , "QQ", "QJs", "QTs", "Q9s", "Q8s", "Q7s", "Q6s", "Q5s", "Q4s", "Q3s", "Q2s",
