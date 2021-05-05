@@ -47,8 +47,13 @@ public struct PlayingCard {
         case ace = "A"
     }
     
-    let suit: Suit
-    let value: Value
+    public let value: Value
+    public let suit: Suit
+    
+    public init(value: Value, suit: Suit) {
+        self.value = value
+        self.suit = suit
+    }
 }
 
 /// A table has players sitting in particular positions with action
@@ -85,7 +90,7 @@ public struct Table {
         case VS_4BET
         case VS_5BET
         
-        func humanReadable() -> String {
+        public func humanReadable() -> String {
             switch self {
             case .LIMP: return "Limp"
             case .RFI: return "RFI"
@@ -103,11 +108,19 @@ public struct Table {
 /// Raise may simply mean raise but may also mean 3bet, 4bet, 5bet, etc depending on the context.
 
 public struct ActionDistribution {
-    var hand: UntypedHand
-    var raise: Float
-    var call: Float
-    var fold: Float
-    var notInRange: Float
+    public var hand: UntypedHand
+    public var raise: Float
+    public var call: Float
+    public var fold: Float
+    public var notInRange: Float
+    
+    public init(hand: UntypedHand, raise: Float, call: Float, fold: Float, notInRange: Float) {
+        self.hand = hand
+        self.raise = raise
+        self.call = call
+        self.fold = fold
+        self.notInRange = notInRange
+    }
 }
 
 /// Whether the game is a cash game or tournament, with different implications for number of blinds and ranges
@@ -124,15 +137,27 @@ public enum GameType: String {
 /// and then look up the `ActionDistribution` for that hand given the other parameters of the drill.
 
 public struct Drill {
-    let title: String
-    let gameType: GameType
-    let blinds: Int
-    let hero: [Table.Position]
-    let villain: [Table.Position]
-    let action: [Table.Action]
-    let heroLocked: Bool
-    let villainLocked: Bool
-    let actionLocked: Bool
+    public let title: String
+    public let gameType: GameType
+    public let blinds: Int
+    public let hero: [Table.Position]
+    public let villain: [Table.Position]
+    public let action: [Table.Action]
+    public let heroLocked: Bool
+    public let villainLocked: Bool
+    public let actionLocked: Bool
+    
+    public init(title: String, gameType: GameType, blinds: Int, hero: [Table.Position], villain: [Table.Position], action: [Table.Action], heroLocked: Bool, villainLocked: Bool, actionLocked: Bool) {
+        self.title = title
+        self.gameType = gameType
+        self.blinds = blinds
+        self.hero = hero
+        self.villain = villain
+        self.action = action
+        self.heroLocked = heroLocked
+        self.villainLocked = villainLocked
+        self.actionLocked = actionLocked
+    }
 }
 
 /// All possible untyped starting hands in hold'em.
