@@ -103,62 +103,76 @@ public struct Table {
             }
         }
     }
-    
 }
 
-/// The distribution of actions to take with an untyped hand.
-/// Raise may simply mean raise but may also mean 3bet, 4bet, 5bet, etc depending on the context.
-
-public struct ActionDistribution {
-    public var hand: UntypedHand
-    public var raise: Float
-    public var call: Float
-    public var fold: Float
-    public var notInRange: Float
+extension UntypedHand {
     
-    public init(hand: UntypedHand, raise: Float, call: Float, fold: Float, notInRange: Float) {
-        self.hand = hand
-        self.raise = raise
-        self.call = call
-        self.fold = fold
-        self.notInRange = notInRange
+    /// The distribution of actions to take with an untyped hand such as KK or AKs
+    /// The exact meaning of raise will depend on the context: raise, 3bet, 4bet, etc
+    
+    public struct Distribution {
+        public var hand: UntypedHand
+        public var raise: Float
+        public var call: Float
+        public var fold: Float
+        public var notInRange: Float
+        
+        public init(hand: UntypedHand, raise: Float, call: Float, fold: Float, notInRange: Float) {
+            self.hand = hand
+            self.raise = raise
+            self.call = call
+            self.fold = fold
+            self.notInRange = notInRange
+        }
     }
 }
 
-/// Whether the game is a cash game or tournament, with different implications for number of blinds and ranges
-
-public enum GameType: String {
-    case cash
-    case tournament
+extension TypedHand {
+    
+    /// The distribution of actions to take with a typed hand such as KcKd or AhKh
+    /// The exact meaning of raise will depend on the context: raise, 3bet, 4bet, etc
+    
+    public struct TypedDistribution {
+        public var hand: TypedHand
+        public var raise: Float
+        public var call: Float
+        public var fold: Float
+        public var notInRange: Float
+        
+        public init(hand: TypedHand, raise: Float, call: Float, fold: Float, notInRange: Float) {
+            self.hand = hand
+            self.raise = raise
+            self.call = call
+            self.fold = fold
+            self.notInRange = notInRange
+        }
+    }
+    
 }
 
-/// All the information needed to specify a set of drills, including metadata about the game, the players' positions and action,
-/// and whether the positions and action can be changed.
-///
-/// A specific drill will generate a random untyped hand for the hero, type it to suits,
-/// and then look up the `ActionDistribution` for that hand given the other parameters of the drill.
+/// Information about the game
 
-public struct Drill {
-    public let title: String
-    public let gameType: GameType
-    public let blinds: Int
-    public let hero: [Table.Position]
-    public let villain: [Table.Position]
-    public let action: [Table.Action]
-    public let heroLocked: Bool
-    public let villainLocked: Bool
-    public let actionLocked: Bool
+public struct Game {
     
-    public init(title: String, gameType: GameType, blinds: Int, hero: [Table.Position], villain: [Table.Position], action: [Table.Action], heroLocked: Bool, villainLocked: Bool, actionLocked: Bool) {
-        self.title = title
-        self.gameType = gameType
-        self.blinds = blinds
-        self.hero = hero
-        self.villain = villain
-        self.action = action
-        self.heroLocked = heroLocked
-        self.villainLocked = villainLocked
-        self.actionLocked = actionLocked
+    /// Whether the game is a cash game or tournament, with different implications for number of blinds and ranges
+    
+    public enum Structure: String {
+        case cash
+        case tournament
+    }
+    
+    /// Variant of poker such as hold em, no limit hold em, or stud
+    
+    public enum Variant {
+        case NLHE
+    }
+    
+    /// Type of betting
+    
+    public enum Betting {
+        case limit
+        case noLimit
+        case pot
     }
 }
 

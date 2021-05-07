@@ -14,7 +14,7 @@ import UIKit
 /// The RangeViewDatasource vends distributions to the range view
 
 public protocol RangeViewDataSource: AnyObject {
-    func distribution(view: RangeView, for hand: UntypedHand) -> ActionDistribution
+    func distribution(view: RangeView, for hand: UntypedHand) -> UntypedHand.Distribution
 }
 
 #if os(macOS)
@@ -39,11 +39,11 @@ public typealias PlatformColor = UIColor
 public typealias PlatformFont = UIFont
 #endif
 
-private let defaultDistribution = ActionDistribution(hand: "", raise: 0, call: 0, fold: 0, notInRange: 1)
+private let defaultDistribution = UntypedHand.Distribution(hand: "", raise: 0, call: 0, fold: 0, notInRange: 1)
 
 /// A RangeView displays the distribution of actions for all HoldEm starting hands
 ///
-/// On iOS the coordinate system (0,0) starts at the top left and grows down whereas on macOS it starts at the bottom left and grows up
+/// On iOS the coordinate system (0,0) starts at the top left and grows down whereas on macOS it starts at the bottom left and grows up.
 /// Adjust by beginning most y coordinates with `bounds.maxY - {val}` and adjusting once more for height of element
 
 public class RangeView: PlatformView {
@@ -182,7 +182,7 @@ public class RangeView: PlatformView {
         #endif
     }
     
-    /// The length of the size of a single cell in the chart.
+    /// The length of the side of a single cell in the chart.
     
     private var edge: CGFloat {
         return min(bounds.size.width, bounds.size.height) / 13.0
