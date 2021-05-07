@@ -13,7 +13,7 @@ import UIKit
 
 /// The RangeViewDatasource vends distributions to the range view
 
-protocol RangeViewDataSource: AnyObject {
+public protocol RangeViewDataSource: AnyObject {
     func distribution(view: RangeView, for hand: UntypedHand) -> ActionDistribution
 }
 
@@ -21,7 +21,7 @@ protocol RangeViewDataSource: AnyObject {
 
 /// The RangeViewDelegate will be informed as the user paints a range. macOS only
 
-protocol RangeViewDelegate: AnyObject {
+public protocol RangeViewDelegate: AnyObject {
     func didBeginPainting(_ view: RangeView, hand: UntypedHand, flags: RangeView.PaintFlags)
     func didPaint(_ view: RangeView, hand: UntypedHand, flags: RangeView.PaintFlags)
     func didFinishPainting(_ view: RangeView, hand: UntypedHand?, flags: RangeView.PaintFlags)
@@ -30,13 +30,13 @@ protocol RangeViewDelegate: AnyObject {
 #endif
 
 #if os(macOS)
-typealias PlatformView = NSView
-typealias PlatformColor = NSColor
-typealias PlatformFont = NSFont
+public typealias PlatformView = NSView
+public typealias PlatformColor = NSColor
+public typealias PlatformFont = NSFont
 #elseif os(iOS)
-typealias PlatformView = UIView
-typealias PlatformColor = UIColor
-typealias PlatformFont = UIFont
+public typealias PlatformView = UIView
+public typealias PlatformColor = UIColor
+public typealias PlatformFont = UIFont
 #endif
 
 private let defaultDistribution = ActionDistribution(hand: "", raise: 0, call: 0, fold: 0, notInRange: 1)
@@ -46,18 +46,18 @@ private let defaultDistribution = ActionDistribution(hand: "", raise: 0, call: 0
 /// On iOS the coordinate system (0,0) starts at the top left and grows down whereas on macOS it starts at the bottom left and grows up
 /// Adjust by beginning most y coordinates with `bounds.maxY - {val}` and adjusting once more for height of element
 
-class RangeView: PlatformView {
+public class RangeView: PlatformView {
     
-    struct Theme {
-        let notInRangeColor: PlatformColor
-        let raiseColor: PlatformColor
-        let callColor: PlatformColor
-        let foldColor: PlatformColor
-        let gridColor: PlatformColor
-        let labelColor: PlatformColor
+    public struct Theme {
+        public let notInRangeColor: PlatformColor
+        public let raiseColor: PlatformColor
+        public let callColor: PlatformColor
+        public let foldColor: PlatformColor
+        public let gridColor: PlatformColor
+        public let labelColor: PlatformColor
     }
     
-    static let defaultTheme = Theme(
+    public static let defaultTheme = Theme(
         notInRangeColor: PlatformColor(white: 0.1, alpha: 1.0),
         raiseColor: PlatformColor(displayP3Red: 227.0/255.0, green: 92.0/255.0, blue: 41.0/255.0, alpha: 1.0),
         callColor: PlatformColor(displayP3Red: 67.0/255.0, green: 155.0/255.0, blue: 29.0/255.0, alpha: 1.0),
@@ -68,24 +68,28 @@ class RangeView: PlatformView {
     
     #if os(macOS)
     
-    struct PaintFlags: OptionSet {
-        let rawValue: Int
+    public struct PaintFlags: OptionSet {
+        public let rawValue: Int
         
-        static let none         = PaintFlags([])
-        static let dragging     = PaintFlags(rawValue: 1 << 0)
-        static let cmdKeyDown   = PaintFlags(rawValue: 1 << 1)
-        static let shiftKeyDown = PaintFlags(rawValue: 1 << 2)
+        public static let none         = PaintFlags([])
+        public static let dragging     = PaintFlags(rawValue: 1 << 0)
+        public static let cmdKeyDown   = PaintFlags(rawValue: 1 << 1)
+        public static let shiftKeyDown = PaintFlags(rawValue: 1 << 2)
+        
+        public init(rawValue: Int) {
+            self.rawValue = rawValue
+        }
     }
     
     #endif
     
-    weak var dataSource: RangeViewDataSource?
+    public weak var dataSource: RangeViewDataSource?
     
     #if os(macOS)
-    weak var delegate: RangeViewDelegate?
+    public weak var delegate: RangeViewDelegate?
     #endif
     
-    var theme = defaultTheme {
+    public var theme = defaultTheme {
         didSet {
             setNeedsDisplay(bounds)
         }
@@ -93,7 +97,7 @@ class RangeView: PlatformView {
     
     #if os(macOS)
     
-    var backgroundColor: PlatformColor = PlatformColor.white {
+    public var backgroundColor: PlatformColor = PlatformColor.white {
         didSet {
             setNeedsDisplay(bounds)
         }
@@ -103,7 +107,7 @@ class RangeView: PlatformView {
     
     /// True to center the view vertically, false otherwise
     
-    var centerVertically = true {
+    public var centerVertically = true {
         didSet {
             setNeedsDisplay(bounds)
         }
@@ -111,7 +115,7 @@ class RangeView: PlatformView {
     
     /// True to center the view horizontally, false otherwise
     
-    var centerHorizontally = true {
+    public var centerHorizontally = true {
         didSet {
             setNeedsDisplay(bounds)
         }
@@ -179,7 +183,7 @@ class RangeView: PlatformView {
     
     /// Returns a bitmap representation of the chart
     
-    var bitmap: NSBitmapImageRep? {
+    public var bitmap: NSBitmapImageRep? {
         let frame = chartFrame.insetBy(dx: -1, dy: -1).offsetBy(dx: centerOffset.x, dy: centerOffset.y)
         let bmp = bitmapImageRepForCachingDisplay(in: frame)!
         cacheDisplay(in: frame, to: bmp)
@@ -208,7 +212,7 @@ class RangeView: PlatformView {
     
     #if os(macOS)
     
-    override var acceptsFirstResponder: Bool {
+    public override var acceptsFirstResponder: Bool {
         return true
     }
     
@@ -216,7 +220,7 @@ class RangeView: PlatformView {
     
     // MARK: - Draw
     
-    override func draw(_ rect: CGRect) {
+    public override func draw(_ rect: CGRect) {
         #if os(macOS)
         guard let context = NSGraphicsContext.current?.cgContext else {
             return
@@ -393,7 +397,7 @@ class RangeView: PlatformView {
 
 extension RangeView {
     
-    override func mouseDown(with event: NSEvent) {
+    public override func mouseDown(with event: NSEvent) {
         let location = convert(event.locationInWindow, from: nil)
         guard let theHand = hand(for: location) else {
             return
@@ -404,7 +408,7 @@ extension RangeView {
         setNeedsDisplay(bounds(for: theHand))
     }
     
-    override func mouseDragged(with event: NSEvent) {
+    public override func mouseDragged(with event: NSEvent) {
         let location = convert(event.locationInWindow, from: nil)
         guard let theHand = hand(for: location) else {
             return
@@ -414,7 +418,7 @@ extension RangeView {
         setNeedsDisplay(bounds(for: theHand))
     }
     
-    override func mouseUp(with event: NSEvent) {
+    public override func mouseUp(with event: NSEvent) {
         delegate?.didFinishPainting(self, hand: nil, flags: eventFlags(dragging: false))
     }
     
