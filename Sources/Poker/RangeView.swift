@@ -55,6 +55,15 @@ public class RangeView: PlatformView {
         public let foldColor: PlatformColor
         public let gridColor: PlatformColor
         public let labelColor: PlatformColor
+        
+        public init(notInRangeColor: PlatformColor, raiseColor: PlatformColor, callColor: PlatformColor, foldColor: PlatformColor, gridColor: PlatformColor, labelColor: PlatformColor) {
+            self.notInRangeColor = notInRangeColor
+            self.raiseColor = raiseColor
+            self.callColor = callColor
+            self.foldColor = foldColor
+            self.gridColor = gridColor
+            self.labelColor = labelColor
+        }
     }
     
     public static let defaultTheme = Theme(
