@@ -5,6 +5,8 @@
 //  Created by Philip Dow on 5/5/21.
 //
 
+// TODO: Change to Double values
+
 import Foundation
 
 /// An untyped hand only indicates whether the hand is suited (s) or unsited (o) without specifying the suits, such as "AKo". StartingHands are untyped.
