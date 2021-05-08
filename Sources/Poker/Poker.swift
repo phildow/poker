@@ -112,12 +112,12 @@ extension UntypedHand {
     
     public struct Distribution {
         public var hand: UntypedHand
-        public var raise: Float
-        public var call: Float
-        public var fold: Float
-        public var notInRange: Float
+        public var raise: Double
+        public var call: Double
+        public var fold: Double
+        public var notInRange: Double
         
-        public init(hand: UntypedHand, raise: Float, call: Float, fold: Float, notInRange: Float) {
+        public init(hand: UntypedHand, raise: Double, call: Double, fold: Double, notInRange: Double) {
             self.hand = hand
             self.raise = raise
             self.call = call
@@ -134,12 +134,12 @@ extension TypedHand {
     
     public struct TypedDistribution {
         public var hand: TypedHand
-        public var raise: Float
-        public var call: Float
-        public var fold: Float
-        public var notInRange: Float
+        public var raise: Double
+        public var call: Double
+        public var fold: Double
+        public var notInRange: Double
         
-        public init(hand: TypedHand, raise: Float, call: Float, fold: Float, notInRange: Float) {
+        public init(hand: TypedHand, raise: Double, call: Double, fold: Double, notInRange: Double) {
             self.hand = hand
             self.raise = raise
             self.call = call

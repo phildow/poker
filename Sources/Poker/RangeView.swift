@@ -11,6 +11,8 @@ import Cocoa
 import UIKit
 #endif
 
+// TODO: Rename to UntypedDistributionView?
+
 /// The RangeViewDatasource vends distributions to the range view
 
 public protocol RangeViewDataSource: AnyObject {
