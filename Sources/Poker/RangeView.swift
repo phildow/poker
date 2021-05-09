@@ -117,13 +117,17 @@ public class RangeView: PlatformView {
     
     #endif
     
-    /// True to visually indicate a distribution is invalid, false otherwise
+    #if os(macOS)
     
-    public var indicatesInvalidDistribution: Bool = false {
+    /// True to visually indicate a distribution is invalid, false otherwise. macOS only
+    
+    public var indicatesInvalidDistribution = false {
         didSet {
             setNeedsDisplay(bounds)
         }
     }
+    
+    #endif
     
     /// True to center the view vertically, false otherwise
     
@@ -260,7 +264,6 @@ public class RangeView: PlatformView {
             let hand = HoldEm.StartingHands[index]
             let distribution = dataSource?.distribution(view: self, for: hand) ?? defaultDistribution
             
-            let showInvalid = indicatesInvalidDistribution && !distribution.isValid
             let frame = bounds(for: index)
             
             let notInRangeFrame = frame
@@ -283,16 +286,16 @@ public class RangeView: PlatformView {
             context.saveGState()
             frame.clip()
             
-            context.setFillColor(showInvalid ? theme.notInRangeColor.inverted.cgColor : theme.notInRangeColor.cgColor)
+            context.setFillColor(maybeInverting(color: theme.notInRangeColor, for: distribution).cgColor)
             context.fill(notInRangeFrame)
             
-            context.setFillColor(showInvalid ? theme.foldColor.inverted.cgColor : theme.foldColor.cgColor)
+            context.setFillColor(maybeInverting(color: theme.foldColor, for: distribution).cgColor)
             context.fill(foldFrame)
             
-            context.setFillColor(showInvalid ? theme.callColor.inverted.cgColor : theme.callColor.cgColor)
+            context.setFillColor(maybeInverting(color: theme.callColor, for: distribution).cgColor)
             context.fill(callFrame)
             
-            context.setFillColor(showInvalid ? theme.raiseColor.inverted.cgColor : theme.raiseColor.cgColor)
+            context.setFillColor(maybeInverting(color: theme.raiseColor, for: distribution).cgColor)
             context.fill(raiseFrame)
             
             context.restoreGState()
@@ -411,8 +414,20 @@ public class RangeView: PlatformView {
         
         return HoldEm.StartingHands[index]
     }
-
-    func setNeedsDisplayForHand(_ hand: UntypedHand) {
+    
+    private func maybeInverting(color: PlatformColor, for distribution: UntypedHand.Distribution) -> PlatformColor {
+        #if os(macOS)
+        if indicatesInvalidDistribution && !distribution.isValid {
+            return color.usingColorSpace(.displayP3)!.inverted
+        } else {
+            return color
+        }
+        #elseif os(iOS)
+        return color
+        #endif
+    }
+    
+    public func setNeedsDisplayForHand(_ hand: UntypedHand) {
         setNeedsDisplay(bounds(for: hand))
     }
 }
