@@ -284,7 +284,7 @@ public class RangeView: PlatformView {
                 height: frame.size.height)
             
             context.saveGState()
-            frame.clip()
+            context.clip(to: frame)
             
             context.setFillColor(maybeInverting(color: theme.notInRangeColor, for: distribution).cgColor)
             context.fill(notInRangeFrame)
