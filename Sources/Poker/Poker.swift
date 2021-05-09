@@ -124,6 +124,24 @@ extension UntypedHand {
             self.fold = fold
             self.notInRange = notInRange
         }
+        
+        /// Returns true if this is a valid probability distribution, false otherwise
+        
+        public var isValid: Bool {
+            return sign == 1 && sum == 1
+        }
+        
+        /// Returns -1 if any of raise, call, fold, or notInRange is negative, returns +1 otherwise
+        
+        private var sign: Double {
+            return (fold < 0 || call < 0 || raise < 0 || notInRange < 0) ? -1 : 1
+        }
+        
+        /// Returns the sum of raise, call, fold, and notInRange
+        
+        private var sum: Double {
+            return fold + call + raise + notInRange
+        }
     }
 }
 
@@ -145,6 +163,24 @@ extension TypedHand {
             self.call = call
             self.fold = fold
             self.notInRange = notInRange
+        }
+        
+        /// Returns true if this is a valid probability distribution, false otherwise
+        
+        public var isValid: Bool {
+            return sign == 1 && sum == 1
+        }
+        
+        /// Returns -1 if any of raise, call, fold, or notInRange is negative, returns +1 otherwise
+        
+        private var sign: Double {
+            return (fold < 0 || call < 0 || raise < 0 || notInRange < 0) ? -1 : 1
+        }
+        
+        /// Returns the sum of raise, call, fold, and notInRange
+        
+        private var sum: Double {
+            return fold + call + raise + notInRange
         }
     }
     

@@ -5,13 +5,14 @@
 //  Created by Philip Dow on 4/29/21.
 //
 
+//  TODO: Option to visually indicate selected cell
+//  TODO: Rename to UntypedDistributionView?
+
 #if os(macOS)
 import Cocoa
 #elseif os(iOS)
 import UIKit
 #endif
-
-// TODO: Rename to UntypedDistributionView?
 
 /// The RangeViewDatasource vends distributions to the range view
 
@@ -115,6 +116,14 @@ public class RangeView: PlatformView {
     }
     
     #endif
+    
+    /// True to visually indicate a distribution is invalid, false otherwise
+    
+    public var indicatesInvalidDistribution: Bool = false {
+        didSet {
+            setNeedsDisplay(bounds)
+        }
+    }
     
     /// True to center the view vertically, false otherwise
     
@@ -251,6 +260,7 @@ public class RangeView: PlatformView {
             let hand = HoldEm.StartingHands[index]
             let distribution = dataSource?.distribution(view: self, for: hand) ?? defaultDistribution
             
+            let showInvalid = indicatesInvalidDistribution && !distribution.isValid
             let frame = bounds(for: index)
             
             let notInRangeFrame = frame
@@ -270,17 +280,22 @@ public class RangeView: PlatformView {
                 width: CGFloat((distribution.raise))*frame.size.width,
                 height: frame.size.height)
             
-            context.setFillColor(theme.notInRangeColor.cgColor)
+            context.saveGState()
+            frame.clip()
+            
+            context.setFillColor(showInvalid ? theme.notInRangeColor.inverted.cgColor : theme.notInRangeColor.cgColor)
             context.fill(notInRangeFrame)
             
-            context.setFillColor(theme.foldColor.cgColor)
+            context.setFillColor(showInvalid ? theme.foldColor.inverted.cgColor : theme.foldColor.cgColor)
             context.fill(foldFrame)
             
-            context.setFillColor(theme.callColor.cgColor)
+            context.setFillColor(showInvalid ? theme.callColor.inverted.cgColor : theme.callColor.cgColor)
             context.fill(callFrame)
             
-            context.setFillColor(theme.raiseColor.cgColor)
+            context.setFillColor(showInvalid ? theme.raiseColor.inverted.cgColor : theme.raiseColor.cgColor)
             context.fill(raiseFrame)
+            
+            context.restoreGState()
         }}
         
         // Draw Grid
@@ -462,8 +477,18 @@ extension RangeView {
 
 // MARK: - CGPoint Extension
 
-extension CGPoint {
+fileprivate extension CGPoint {
     func offsetBy<T: BinaryFloatingPoint>(dx: T, dy: T) -> CGPoint {
         return CGPoint(x: self.x + CGFloat(dx), y: self.y + CGFloat(dy))
+    }
+}
+
+// MARK: - Color Extension
+
+fileprivate extension PlatformColor {
+    var inverted: PlatformColor {
+        var a: CGFloat = 0.0, r: CGFloat = 0.0, g: CGFloat = 0.0, b: CGFloat = 0.0
+        getRed(&r, green: &g, blue: &b, alpha: &a)
+        return PlatformColor(red: 1.0-r, green: 1.0-g, blue: 1.0-b, alpha: a)
     }
 }
