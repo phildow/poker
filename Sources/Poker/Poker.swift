@@ -128,12 +128,12 @@ extension UntypedHand {
         /// Returns true if this is a valid probability distribution, false otherwise
         
         public var isValid: Bool {
-            return sign == 1 && sum == 1
+            return sign == 1 && fabs(sum - 1) < Double.ulpOfOne
         }
         
         /// Returns -1 if any of raise, call, fold, or notInRange is negative, returns +1 otherwise
         
-        private var sign: Double {
+        private var sign: Int {
             return (fold < 0 || call < 0 || raise < 0 || notInRange < 0) ? -1 : 1
         }
         
