@@ -338,7 +338,7 @@ public class RangeView: PlatformView {
         
         for i in 0...12 { for j in 0...12 {
             let index = i*13+j
-            let text = HoldEm.StartingHands[index] as NSString
+            let text = HoldEm.StartingHands[index].string
             let textSize = text.size(withAttributes: attributes)
             
             #if os(macOS)
@@ -383,7 +383,7 @@ public class RangeView: PlatformView {
     
     /// Hand given a point in the view, may be null
     
-    private func hand(for point: CGPoint) -> String? {
+    private func hand(for point: CGPoint) -> UntypedHand? {
         let offsetPoint = point.offsetBy(dx: -centerOffset.x, dy: -centerOffset.y)
         
         #if os(macOS)
