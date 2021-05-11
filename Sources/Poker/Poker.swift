@@ -5,7 +5,8 @@
 //  Created by Philip Dow on 5/5/21.
 //
 
-// TODO: Change to Double values
+// TODO: Hands are specifically holdem hands
+// TODO: method conflicts when we typealias TypedHand and UntypedHand to String, make proper class or struct
 
 import Foundation
 
@@ -27,12 +28,27 @@ public enum Suited: String {
 /// A playing card is a fully typed card with a suit and a value.
 
 public struct PlayingCard {
+    
+    /// The suit of the playing card
+    
     public enum Suit: String, CaseIterable {
-        case hearts = "♥"
-        case spades = "♠"
-        case diamonds = "♦"
-        case clubs = "♣"
+        case hearts = "h"
+        case spades = "s"
+        case diamonds = "d"
+        case clubs = "c"
+        
+        public var graphic: String {
+            switch self {
+            case .hearts:   return "♥"
+            case .spades:   return "♠"
+            case .diamonds: return "♦"
+            case .clubs:    return "♣"
+            }
+        }
     }
+    
+    /// The value of the playing card
+    
     public enum Value: String, CaseIterable {
         case deuce = "2"
         case trey = "3"
@@ -55,6 +71,12 @@ public struct PlayingCard {
     public init(value: Value, suit: Suit) {
         self.value = value
         self.suit = suit
+    }
+    
+    fileprivate init(hand: TypedHand) {
+        let v = String(hand[hand.index(hand.startIndex, offsetBy: 0)])
+        let s = String(hand[hand.index(hand.startIndex, offsetBy: 1)])
+        self.init(value: Value(rawValue: v)!, suit: Suit(rawValue: s)!)
     }
 }
 
@@ -143,6 +165,31 @@ extension UntypedHand {
             return fold + call + raise + notInRange
         }
     }
+    
+    /// Converts an UntypedHand to a TypedHand with randomly chosen suits
+    
+    public var typeHand: TypedHand {
+        let v1 = String(self[self.index(self.startIndex, offsetBy: 0)])
+        let v2 = String(self[self.index(self.startIndex, offsetBy: 1)])
+        
+        let s1 = PlayingCard.Suit.allCases.randomElement()!.rawValue
+        var s2 = s1
+        while s2 == s1 {
+            s2 = PlayingCard.Suit.allCases.randomElement()!.rawValue
+        }
+        
+        if self.count == 2 {
+            // pocket pair
+            return "\(v1)\(s1)\(v2)\(s2)"
+        } else if String(self[self.index(self.startIndex, offsetBy: 2)]) == Suited.suited.rawValue {
+            // suited cards
+            return "\(v1)\(s1)\(v2)\(s1)"
+        } else {
+            // unsuited cards
+            return "\(v1)\(s1)\(v2)\(s2)"
+        }
+    }
+    
 }
 
 extension TypedHand {
@@ -168,12 +215,12 @@ extension TypedHand {
         /// Returns true if this is a valid probability distribution, false otherwise
         
         public var isValid: Bool {
-            return sign == 1 && sum == 1
+            return sign == 1 && fabs(sum - 1) < Double.ulpOfOne
         }
         
         /// Returns -1 if any of raise, call, fold, or notInRange is negative, returns +1 otherwise
         
-        private var sign: Double {
+        private var sign: Int {
             return (fold < 0 || call < 0 || raise < 0 || notInRange < 0) ? -1 : 1
         }
         
@@ -184,6 +231,13 @@ extension TypedHand {
         }
     }
     
+    /// Returns a tuple of `PlayingCard` for the hand
+    
+    public var playingCards: (PlayingCard, PlayingCard) {
+        let c1 = String(self.prefix(2))
+        let c2 = String(self.suffix(2))
+        return (PlayingCard(hand: c1), PlayingCard(hand: c2))
+    }
 }
 
 /// Information about the game
