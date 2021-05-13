@@ -151,7 +151,7 @@ public extension TypedHand {
     /// The distribution of actions to take with a typed hand such as KcKd or AhKh
     /// The exact meaning of raise will depend on the context: raise, 3bet, 4bet, etc
     
-    struct TypedDistribution {
+    struct Distribution {
         public var hand: TypedHand
         public var raise: Double
         public var call: Double

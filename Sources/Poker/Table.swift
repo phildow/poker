@@ -40,15 +40,17 @@ public struct Table {
         case VS_3BET
         case VS_4BET
         case VS_5BET
+        case NA
         
         public func humanReadable() -> String {
             switch self {
-            case .LIMP: return "Limp"
-            case .RFI: return "RFI"
+            case .LIMP:     return "Limp"
+            case .RFI:      return "RFI"
             case .VS_RAISE: return "VS Raise"
-            case .VS_3BET: return "VS 3Bet"
-            case .VS_4BET: return "VS 4Bet"
-            case .VS_5BET: return "VS 5Bet"
+            case .VS_3BET:  return "VS 3Bet"
+            case .VS_4BET:  return "VS 4Bet"
+            case .VS_5BET:  return "VS 5Bet"
+            case .NA:       return "NA"
             }
         }
     }
