@@ -29,6 +29,7 @@ public struct Table {
         case HJ
         case CO
         case BTN
+        case NA
     }
 
     /// The action facing the hero. All actions but raise first in (RFI) imply a villain.
