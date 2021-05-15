@@ -91,6 +91,17 @@ public extension UntypedHand {
             self.init(hand: UntypedHand(string: hand), raise: raise, call: call, fold: fold, notInRange: notInRange)
         }
         
+        /// Returns the number of non-zero entries in the distribution, between one  and four inclusive
+        
+        public var rank: Int {
+            return [
+                !Double.isZero(double: notInRange),
+                !Double.isZero(double: raise),
+                !Double.isZero(double: call),
+                !Double.isZero(double: fold)
+            ].map { $0 ? 1 : 0 }.reduce(0,+)
+        }
+        
         /// Returns true if this is a valid probability distribution, false otherwise
         
         public var isValid: Bool {
@@ -108,6 +119,30 @@ public extension UntypedHand {
         private var sum: Double {
             return fold + call + raise + notInRange
         }
+    }
+    
+    /// Returns a distribution for this hand that is 100% not in range
+    
+    var notInRange: Distribution {
+        return Distribution(hand: self, raise: 0, call: 0, fold: 0, notInRange: 1)
+    }
+    
+    /// Returns a distribution for this hand that is 100% raise
+    
+    var raise: Distribution {
+        return Distribution(hand: self, raise: 1, call: 0, fold: 0, notInRange: 0)
+    }
+    
+    /// Returns a distribution for this hand that is 100% call
+    
+    var call: Distribution {
+        return Distribution(hand: self, raise: 0, call: 1, fold: 0, notInRange: 0)
+    }
+    
+    /// Returns a distribution for this hand that is 100% fold
+    
+    var fold: Distribution {
+        return Distribution(hand: self, raise: 0, call: 0, fold: 1, notInRange: 0)
     }
 }
 
@@ -170,6 +205,17 @@ public extension TypedHand {
             self.init(hand: TypedHand(string: hand), raise: raise, call: call, fold: fold, notInRange: notInRange)
         }
         
+        /// Returns the number of non-zero entries in the distribution, between one  and four inclusive
+        
+        public var rank: Int {
+            return [
+                !Double.isZero(double: notInRange),
+                !Double.isZero(double: raise),
+                !Double.isZero(double: call),
+                !Double.isZero(double: fold)
+            ].map { $0 ? 1 : 0 }.reduce(0,+)
+        }
+        
         /// Returns true if this is a valid probability distribution, false otherwise
         
         public var isValid: Bool {
@@ -187,5 +233,29 @@ public extension TypedHand {
         private var sum: Double {
             return fold + call + raise + notInRange
         }
+    }
+    
+    /// Returns a distribution for this hand that is 100% not in range
+    
+    var notInRange: Distribution {
+        return Distribution(hand: self, raise: 0, call: 0, fold: 0, notInRange: 1)
+    }
+    
+    /// Returns a distribution for this hand that is 100% raise
+    
+    var raise: Distribution {
+        return Distribution(hand: self, raise: 1, call: 0, fold: 0, notInRange: 0)
+    }
+    
+    /// Returns a distribution for this hand that is 100% call
+    
+    var call: Distribution {
+        return Distribution(hand: self, raise: 0, call: 1, fold: 0, notInRange: 0)
+    }
+    
+    /// Returns a distribution for this hand that is 100% fold
+    
+    var fold: Distribution {
+        return Distribution(hand: self, raise: 0, call: 0, fold: 1, notInRange: 0)
     }
 }
